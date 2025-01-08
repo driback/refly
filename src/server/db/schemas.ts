@@ -1,10 +1,9 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1087091859.
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, varchar, type AnyPgColumn } from "drizzle-orm/pg-core";
+import { type AnyPgColumn, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 //Bookmark
-export const Bookmarks = pgTable("bookmarks", {
+export const Bookmark = pgTable("bookmark", {
   id: text("id")
     .primaryKey()
     .$default(() => crypto.randomUUID())
@@ -13,49 +12,50 @@ export const Bookmarks = pgTable("bookmarks", {
   title: text("title"),
   description: text("description"),
   imageUrl: text("image_url"),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+  iconUrl: text("icon_url"),
+  createdAt: timestamp("created_at", { precision: 3, mode: "date" })
     .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
+  updatedAt: timestamp("updated_at", { precision: 3, mode: "date" })
     .defaultNow()
     .notNull(),
 });
 
-export const BookmarksToTags = pgTable("bookmarks_to_tags", {
+export const BookmarkToTag = pgTable("bookmark_to_tag", {
   bookmarkId: text("bookmark_id")
-    .references(() => Bookmarks.id, { onDelete: "cascade" })
+    .references(() => Bookmark.id, { onDelete: "cascade" })
     .notNull(),
   tagId: text("tag_id")
-    .references(() => Tags.id, { onDelete: "cascade" })
+    .references(() => Tag.id, { onDelete: "cascade" })
     .notNull(),
 });
 
 //Folder
-export const Folders = pgTable("folders", {
+export const Folder = pgTable("folder", {
   id: text("id")
     .primaryKey()
     .$default(() => crypto.randomUUID())
     .notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  parentId: text("parent_id").references((): AnyPgColumn => Folders.id, {
+  parentId: text("parent_id").references((): AnyPgColumn => Folder.id, {
     onDelete: "cascade",
   }),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+  createdAt: timestamp("created_at", { precision: 3, mode: "date" })
     .defaultNow()
     .notNull(),
 });
 
-export const BookmarksToFolders = pgTable("bookmarks_to_folders", {
+export const BookmarkToFolder = pgTable("bookmark_to_folder", {
   bookmarkId: text("bookmark_id")
-    .references(() => Bookmarks.id, { onDelete: "cascade" })
+    .references(() => Bookmark.id, { onDelete: "cascade" })
     .notNull(),
   folderId: text("folder_id")
-    .references(() => Folders.id, { onDelete: "cascade" })
+    .references(() => Folder.id, { onDelete: "cascade" })
     .notNull(),
 });
 
 //Tag
-export const Tags = pgTable("tags", {
+export const Tag = pgTable("tag", {
   id: text("id")
     .primaryKey()
     .$default(() => nanoid(10))
@@ -64,19 +64,19 @@ export const Tags = pgTable("tags", {
 });
 
 //Relations
-export const BookmarksRelations = relations(Bookmarks, ({ many }) => ({
-  tags: many(BookmarksToTags),
-  folders: many(BookmarksToFolders),
+export const BookmarkRelations = relations(Bookmark, ({ many }) => ({
+  tag: many(BookmarkToTag),
+  folder: many(BookmarkToFolder),
 }));
 
-export const TagsRelations = relations(Tags, ({ many }) => ({
-  bookmarks: many(BookmarksToTags),
+export const TagRelations = relations(Tag, ({ many }) => ({
+  bookmark: many(BookmarkToTag),
 }));
 
-export const FoldersRelations = relations(Folders, ({ one, many }) => ({
-  parent: one(Folders, {
-    fields: [Folders.parentId],
-    references: [Folders.id],
+export const FolderRelations = relations(Folder, ({ one, many }) => ({
+  parent: one(Folder, {
+    fields: [Folder.parentId],
+    references: [Folder.id],
   }),
-  bookmarks: many(BookmarksToFolders),
+  bookmark: many(BookmarkToFolder),
 }));

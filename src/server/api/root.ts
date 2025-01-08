@@ -1,14 +1,7 @@
-import {
-  createCallerFactory,
-  createTRPCRouter,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { BookmarkRoute } from "./routers/bookmark.route";
 
-export const appRouter = createTRPCRouter({
-  post: publicProcedure.query(async () => {
-    return ["okok"];
-  }),
-});
+export const appRouter = createTRPCRouter({ bookmark: BookmarkRoute });
 
 export type AppRouter = typeof appRouter;
 
