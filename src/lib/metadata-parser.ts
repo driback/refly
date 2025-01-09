@@ -218,7 +218,6 @@ function extractTwitterPlatformApp(metadata: MetaData, platform: string): Twitte
     url: metadata[`twitter:app:url:${platform}`],
   };
 }
-
 function extractIconMetadata(
   root: HTMLElement,
   site?: string,
@@ -226,26 +225,30 @@ function extractIconMetadata(
   const icons: Pick<BaseMetadata, "icon" | "shortcutIcon" | "appleIcon"> = {};
   const linkTags = root.querySelectorAll("link");
 
+  const relToKey: Record<
+    string,
+    keyof Pick<BaseMetadata, "icon" | "shortcutIcon" | "appleIcon">
+  > = {
+    icon: "icon",
+    "shortcut icon": "shortcutIcon",
+    "apple-touch-icon": "appleIcon",
+  };
+
   for (const link of linkTags) {
     const rel = link.getAttribute("rel");
     const href = link.getAttribute("href");
 
-    if (!href) continue;
+    if (!(href && rel && rel in relToKey)) continue;
 
-    switch (rel) {
-      case "icon":
-        icons.icon = href;
-        break;
-      case "shortcut icon":
-        if (site) {
-          const uri = new URL(site);
-          icons.shortcutIcon = `${uri.origin}${href}`;
-        }
-        break;
-      case "apple-touch-icon":
-        icons.appleIcon = href;
-        break;
-    }
+    const key = relToKey[rel] as keyof Pick<
+      BaseMetadata,
+      "icon" | "shortcutIcon" | "appleIcon"
+    >;
+    icons[key] = href.startsWith("http")
+      ? href
+      : site
+        ? new URL(href, site).toString()
+        : undefined;
   }
 
   return icons;

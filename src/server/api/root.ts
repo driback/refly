@@ -1,5 +1,5 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
-import { BookmarkRoute } from "./routers/bookmark.route";
+import { BookmarkRoute } from "./routers/bookmark/bookmark.route";
 
 export const appRouter = createTRPCRouter({ bookmark: BookmarkRoute });
 

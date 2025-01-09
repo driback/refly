@@ -2,6 +2,7 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { toast } from "sonner";
 import { z } from "zod";
 import { api } from "~/trpc/react";
 import { InputConform } from "./conform/input-conform";
@@ -11,7 +12,14 @@ import { DialogClose } from "./ui/dotted-dialog";
 const CreateBookmarkFormSchema = z.object({ url: z.string().url() });
 
 const CreateBookmarkForm = () => {
-  const { mutateAsync, isPending } = api.bookmark.create.useMutation();
+  const { mutateAsync, isPending } = api.bookmark.create.useMutation({
+    onSuccess: (_, val) => {
+      toast.success(`${val.url} has added to the bookmarks`);
+    },
+    onError: (error, val) => {
+      toast.error(`${val.url}: ${error.message}`);
+    },
+  });
 
   const [form, fields] = useForm({
     onValidate({ formData }) {

@@ -1,49 +1,19 @@
-import { PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
-import CreateBookmarkForm from "./create-bookmark-form";
-import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dotted-dialog";
-import { Input } from "./ui/input";
+import CreateBookmark from "./create-bookmark";
+import Refresh from "./refresh";
+import SearchField from "./search-field";
 
 const AppHeader = () => {
   return (
-    <header className="grid grid-cols-[1fr_2fr_1fr] items-center gap-4">
+    <header className="sticky top-0 left-0 z-10 grid grid-cols-[1fr_2fr_1fr] items-center gap-4 bg-background/90 py-4 backdrop-blur-lg">
       <Link href="/" className="font-semibold text-xl">
-        refly.
+        Refly
       </Link>
-
-      <form className="w-full">
-        <div className="relative isolate w-full">
-          <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-2 size-4 opacity-80" />
-          <Input
-            type="text"
-            placeholder="Find bookmark"
-            className="max-h-8 w-full pl-8"
-          />
-        </div>
-      </form>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="ghost" size="icon" className="ml-auto size-8">
-            <PlusIcon className="size-4" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add bookmark</DialogTitle>
-            <DialogDescription>Add a bookmark to your collection.</DialogDescription>
-          </DialogHeader>
-          <CreateBookmarkForm />
-        </DialogContent>
-      </Dialog>
+      <SearchField />
+      <div className="flex items-center gap-1">
+        <CreateBookmark />
+        <Refresh />
+      </div>
     </header>
   );
 };
