@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const BookmarkSchema = z.object({
   title: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   icon: z.string().nullable(),
   image: z.string().nullable(),
   url: z.string(),

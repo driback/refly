@@ -5,6 +5,7 @@ import SmoothScroll from "~/components/smooth-scroll";
 import { BookmarkCardSkeletonList } from "~/features/bookmark/bookmark-card-skeleton";
 import BookmarkList from "~/features/bookmark/bookmark-list";
 import CreateFolder from "~/features/folder/create-folder";
+import FolderList from "~/features/folder/folder-list";
 import type { TFindAllBookmarkInput } from "~/server/api/routers/bookmark/bookmark.schema";
 
 type PageProps<T = object> = {
@@ -36,8 +37,9 @@ const Home = async ({ searchParams }: PageProps) => {
           </Suspense>
         </main>
         <div className="fixed bottom-0 left-0 z-0 flex h-[100dvh] w-full max-w-[calc(calc(100dvw-60dvw)/2)] flex-col items-center justify-center gap-4">
-          <div className="flex w-full flex-col items-end p-4">
+          <div className="flex w-full flex-col items-end gap-4 p-4">
             <CreateFolder />
+            <FolderList />
           </div>
         </div>
       </AppWrapper>

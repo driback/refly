@@ -34,7 +34,7 @@ export const BookmarkToTag = pgTable("bookmark_to_tag", {
 export const Folder = pgTable("folder", {
   id: text("id")
     .primaryKey()
-    .$default(() => crypto.randomUUID())
+    .$default(() => nanoid(10))
     .notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   parentId: text("parent_id").references((): AnyPgColumn => Folder.id, {

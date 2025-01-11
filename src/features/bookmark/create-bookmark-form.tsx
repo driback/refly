@@ -2,6 +2,7 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 import { InputConform } from "~/components/conform/input-conform";
@@ -12,9 +13,12 @@ import { api } from "~/trpc/react";
 const CreateBookmarkFormSchema = z.object({ url: z.string().url() });
 
 const CreateBookmarkForm = () => {
+  const router = useRouter();
+
   const { mutateAsync, isPending } = api.bookmark.create.useMutation({
     onSuccess: (_, val) => {
       toast.success(`${val.url} has added to the bookmarks`);
+      router.refresh();
     },
     onError: (error, val) => {
       toast.error(`${val.url}: ${error.message}`);

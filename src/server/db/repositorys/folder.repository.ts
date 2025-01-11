@@ -10,7 +10,9 @@ export const FolderRespository = {
     return handleMutation(res);
   },
   findAll: async () => {
-    const res = await db.query.Folder.findMany();
+    const res = await db.query.Folder.findMany({
+      orderBy: (fl, { desc }) => desc(fl.createdAt),
+    });
     return res;
   },
 };

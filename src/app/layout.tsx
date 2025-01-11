@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({ subsets: ["latin"] });
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  minimumScale: 1,
+  maximumScale: 2,
+  userScalable: true,
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "hsl(0, 0%, 100%)" },
     { media: "(prefers-color-scheme: dark)", color: "hsl(240, 10%, 3.9%)" },
