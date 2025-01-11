@@ -1,6 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import CreateBookmarkForm from "./create-bookmark-form";
-import { Button } from "./ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dotted-dialog";
+} from "~/components/ui/dotted-dialog";
+import CreateBookmarkForm from "./create-bookmark-form";
 
 const CreateBookmark = () => {
   return (
@@ -18,7 +18,7 @@ const CreateBookmark = () => {
           <PlusIcon className="size-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Add bookmark</DialogTitle>
           <DialogDescription>Add a bookmark to your collection.</DialogDescription>

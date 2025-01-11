@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import AppHeader from "~/components/app-header";
 import AppWrapper from "~/components/app-wrapper";
-import { BookmarkCardSkeletonList } from "~/components/bookmark-card-skeleton";
-import BookmarkList from "~/components/bookmark-list";
 import SmoothScroll from "~/components/smooth-scroll";
+import { BookmarkCardSkeletonList } from "~/features/bookmark/bookmark-card-skeleton";
+import BookmarkList from "~/features/bookmark/bookmark-list";
+import CreateFolder from "~/features/folder/create-folder";
 import type { TFindAllBookmarkInput } from "~/server/api/routers/bookmark/bookmark.schema";
 
 type PageProps<T = object> = {
@@ -34,6 +35,11 @@ const Home = async ({ searchParams }: PageProps) => {
             <BookmarkList input={bookmarkListInput} />
           </Suspense>
         </main>
+        <div className="fixed bottom-0 left-0 z-0 flex h-[100dvh] w-full max-w-[calc(calc(100dvw-60dvw)/2)] flex-col items-center justify-center gap-4">
+          <div className="flex w-full flex-col items-end p-4">
+            <CreateFolder />
+          </div>
+        </div>
       </AppWrapper>
     </SmoothScroll>
   );

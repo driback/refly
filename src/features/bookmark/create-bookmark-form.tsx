@@ -4,10 +4,10 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { toast } from "sonner";
 import { z } from "zod";
+import { InputConform } from "~/components/conform/input-conform";
+import { Button } from "~/components/ui/button";
+import { DialogClose } from "~/components/ui/dotted-dialog";
 import { api } from "~/trpc/react";
-import { InputConform } from "./conform/input-conform";
-import { Button } from "./ui/button";
-import { DialogClose } from "./ui/dotted-dialog";
 
 const CreateBookmarkFormSchema = z.object({ url: z.string().url() });
 

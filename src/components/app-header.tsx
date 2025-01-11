@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CreateBookmark from "./create-bookmark";
+import CreateBookmark from "../features/bookmark/create-bookmark";
 import Refresh from "./refresh";
 import SearchField from "./search-field";
 

@@ -3,7 +3,7 @@ import type { TBookmarkSchema } from "~/server/api/routers/bookmark/bookmark.sch
 import { SquareArrowOutUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import FancyClickEffect from "./fancy-click-effect";
+import FancyClickEffect from "~/components/fancy-click-effect";
 
 const BookmarkCard = (props: TBookmarkSchema) => {
   return (

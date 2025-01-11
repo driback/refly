@@ -1,5 +1,6 @@
 import { db } from "../client";
 import { Bookmark } from "../schemas";
+import { handleMutation } from "./respository.helper";
 
 type BookmarkInsert = typeof Bookmark.$inferInsert;
 type BookmarkFindAll = {
@@ -27,9 +28,4 @@ export const BookmarkRepository = {
     });
     return res;
   },
-};
-
-const handleMutation = (data: object[]) => {
-  if (!data?.[0]) return null;
-  return data[0];
 };

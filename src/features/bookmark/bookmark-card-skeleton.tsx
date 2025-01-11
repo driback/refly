@@ -1,4 +1,4 @@
-import List from "./list";
+import List from "~/components/list";
 
 const BookmarkCardSkeleton = () => {
   return (

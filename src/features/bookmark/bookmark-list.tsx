@@ -1,8 +1,8 @@
 import type { TFindAllBookmarkInput } from "~/server/api/routers/bookmark/bookmark.schema";
 
+import List from "~/components/list";
 import { HydrateClient, api } from "~/trpc/server";
 import BookmarkCard from "./bookmark-card";
-import List from "./list";
 
 const BookmarkList = async ({ input }: { input: TFindAllBookmarkInput }) => {
   const res = await api.bookmark.findAll(input);

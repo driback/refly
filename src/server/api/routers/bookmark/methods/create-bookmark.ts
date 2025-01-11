@@ -38,13 +38,21 @@ export const createBookmark = publicProcedure
         iconUrl,
       });
 
+      if (!bookmark) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Failed to bookmark",
+        });
+      }
+
       return bookmark;
     } catch (error) {
-      console.error("Error creating bookmark:", error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to create bookmark",
-        cause: error,
-      });
+      if (error instanceof Error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+      throw error;
     }
   });
