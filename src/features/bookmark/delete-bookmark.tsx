@@ -62,12 +62,10 @@ const DeleteBookmark = () => {
         </DialogHeader>
         <div className="flex items-center justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="outline" className="mr-2">
-              Cancel
-            </Button>
+            <Button variant="outline">Cancel</Button>
           </DialogClose>
           <Button variant="destructive" disabled={isPending} onClick={handleDelete}>
-            Delete
+            {isPending ? "Deleting..." : "Deleting"}
           </Button>
         </div>
       </DialogContent>

@@ -73,7 +73,7 @@ const CreateFolderForm = () => {
           </Button>
         </DialogClose>
         <Button type="submit" disabled={isPending}>
-          Create
+          {isPending ? "Creating..." : "Create"}
         </Button>
       </div>
     </form>
