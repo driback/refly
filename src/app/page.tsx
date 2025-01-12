@@ -7,6 +7,7 @@ import { BookmarkCardSkeletonList } from "~/features/bookmark/bookmark-card-skel
 import BookmarkList from "~/features/bookmark/bookmark-list";
 import BookmarkToFolder from "~/features/bookmark/bookmark-to-folder";
 import DeleteBookmark from "~/features/bookmark/delete-bookmark";
+import RemoveBookmarkFromFolder from "~/features/bookmark/remove-bookmark-from-folder";
 import CreateFolder from "~/features/folder/create-folder";
 import FolderList from "~/features/folder/folder-list";
 import type { TFindAllBookmarkInput } from "~/server/api/routers/bookmark/bookmark.schema";
@@ -54,6 +55,7 @@ const Home = async ({ searchParams }: PageProps) => {
               <div className="flex flex-col gap-2">
                 <BookmarkToFolder />
                 <DeleteBookmark />
+                <RemoveBookmarkFromFolder />
               </div>
             </div>
           </div>

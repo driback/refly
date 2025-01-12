@@ -35,3 +35,7 @@ export const BookmarkToFolderInput = z.object({
 });
 
 export const DeleteBookmarkInput = z.object({ ids: z.string().array() });
+export const RemoveBookmarkFromFolderInput = z.object({
+  bookmarkId: z.string(),
+  folderId: z.string(),
+});
