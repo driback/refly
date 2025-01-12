@@ -27,7 +27,7 @@ const BookmarkCard = ({ url, image, title, description, icon }: TBookmarkSchema)
     "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, quas!";
 
   return (
-    <div className="group relative flex h-fit flex-col gap-1 rounded-lg border">
+    <div className="group relative flex h-full flex-col gap-1 rounded-lg border">
       <Link href={url} target="_blank">
         <div className="relative isolate aspect-[4_/_2] size-full rounded-md bg-secondary">
           <BookmarkImage src={image!} alt={title} className="object-cover" />
@@ -48,13 +48,12 @@ const BookmarkCard = ({ url, image, title, description, icon }: TBookmarkSchema)
         >
           {description || placeholderText}
         </p>
-
-        <div className="mt-4 flex items-center">
-          <div className="relative size-4 bg-secondary">
-            <BookmarkImage src={icon!} alt={title} className="object-cover" />
-          </div>
-          <SquareArrowOutUpRightIcon className="absolute right-1 bottom-1 size-4 scale-50 opacity-0 mix-blend-difference transition-all group-hover:scale-100 group-hover:opacity-100" />
+      </div>
+      <div className="mt-auto flex items-center p-1 pt-2">
+        <div className="relative size-4 bg-secondary">
+          <BookmarkImage src={icon!} alt={title} className="object-cover" />
         </div>
+        <SquareArrowOutUpRightIcon className="absolute right-1 bottom-1 size-4 scale-50 opacity-0 mix-blend-difference transition-all group-hover:scale-100 group-hover:opacity-100" />
       </div>
     </div>
   );

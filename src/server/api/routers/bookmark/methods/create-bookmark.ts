@@ -30,7 +30,7 @@ export const createBookmark = publicProcedure
       }
 
       const text = await response.text();
-      const metadata = parseMetadata(text);
+      const metadata = parseMetadata(text, input.url);
 
       const iconUrl =
         metadata.base.icon ||

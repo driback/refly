@@ -84,12 +84,12 @@ interface GroupedMetadata {
 }
 
 // Main functions
-export function parseMetadata(html: string): GroupedMetadata {
+export function parseMetadata(html: string, href: string): GroupedMetadata {
   const root = parse(html);
   const metaTags = root.querySelectorAll("meta");
   const metadata: MetaData = extractMetadata(metaTags);
   const groupedMetadata = groupMetadata(metadata);
-  const icons = extractIconMetadata(root, groupedMetadata.openGraph.url);
+  const icons = extractIconMetadata(root, href);
 
   if (!groupedMetadata.base.title) {
     groupedMetadata.base.title = root.querySelector("title")?.text;
@@ -220,7 +220,7 @@ function extractTwitterPlatformApp(metadata: MetaData, platform: string): Twitte
 }
 function extractIconMetadata(
   root: HTMLElement,
-  site?: string,
+  site: string,
 ): Pick<BaseMetadata, "icon" | "shortcutIcon" | "appleIcon"> {
   const icons: Pick<BaseMetadata, "icon" | "shortcutIcon" | "appleIcon"> = {};
   const linkTags = root.querySelectorAll("link");
@@ -244,11 +244,8 @@ function extractIconMetadata(
       BaseMetadata,
       "icon" | "shortcutIcon" | "appleIcon"
     >;
-    icons[key] = href.startsWith("http")
-      ? href
-      : site
-        ? new URL(href, site).toString()
-        : undefined;
+
+    icons[key] = href.startsWith("http") ? href : new URL(href, site).toString();
   }
 
   return icons;

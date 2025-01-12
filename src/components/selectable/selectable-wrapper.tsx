@@ -5,11 +5,12 @@ import { cn } from "~/lib/utils";
 import { Checkbox } from "../ui/checkbox";
 import { type SelectableItem, useSelectableStore } from "./selectable-provider";
 
-const SelectableWrapper = ({
-  children,
-  id,
-  name,
-}: { children: ReactNode } & SelectableItem) => {
+type SelectableWrapperProps = {
+  children: ReactNode;
+  asChild?: boolean;
+} & SelectableItem;
+
+const SelectableWrapper = ({ children, id, name }: SelectableWrapperProps) => {
   const list = useSelectableStore((state) => state.list);
 
   const {
@@ -33,12 +34,7 @@ const SelectableWrapper = ({
       : "opacity-50";
 
   return (
-    <div
-      className={cn(
-        "group/check relative size-auto h-fit rounded-lg transition-all",
-        cln,
-      )}
-    >
+    <div className={cn("group/check relative size-auto rounded-lg transition-all", cln)}>
       {children}
       <label
         htmlFor={id}
