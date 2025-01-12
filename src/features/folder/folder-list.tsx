@@ -1,17 +1,25 @@
-import Link from "next/link";
-import List from "~/components/list";
-import { api } from "~/trpc/server";
+"use client";
 
-const FolderList = async () => {
-  const res = await api.folder.findAll();
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import List from "~/components/list";
+import { useFoldersStore } from "./folder-provider";
+
+const FolderList = () => {
+  const searchParams = useSearchParams();
+  const folders = useFoldersStore((s) => s.folders);
+  const foldersArray = Array.from(folders.values());
+
+  const folderId = searchParams.get("folder");
 
   return (
     <ul className="flex flex-col items-end gap-4">
-      <List of={res}>
+      <List of={foldersArray}>
         {(folder) => (
           <li
             key={folder.id}
-            className="text-sm opacity-80 transition-opacity hover:opacity-100"
+            data-active={folder.id === folderId}
+            className="text-sm opacity-70 transition-opacity hover:opacity-100 data-[active=true]:font-medium data-[active=true]:opacity-100"
           >
             <Link href={`/?folder=${folder.id}`}>{folder.name}</Link>
           </li>

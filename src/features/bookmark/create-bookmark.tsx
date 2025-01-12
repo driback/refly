@@ -1,4 +1,5 @@
 import { PlusIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -10,13 +11,17 @@ import {
 } from "~/components/ui/dotted-dialog";
 import CreateBookmarkForm from "./create-bookmark-form";
 
-const CreateBookmark = () => {
+const CreateBookmark = ({ customTrigger }: { customTrigger?: ReactNode }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="ml-auto size-8">
-          <PlusIcon className="size-4" />
-        </Button>
+        {!customTrigger ? (
+          <Button variant="ghost" size="icon" className="ml-auto size-8">
+            <PlusIcon className="size-4" />
+          </Button>
+        ) : (
+          customTrigger
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

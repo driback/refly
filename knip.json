@@ -22,5 +22,6 @@
       "src/app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
       "src/pages/**/*.{js,jsx,ts,tsx}"
     ]
-  }
+  },
+  "ignore": ["migrate.ts"]
 }

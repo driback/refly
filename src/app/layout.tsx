@@ -5,8 +5,11 @@ import type { ReactNode } from "react";
 
 import { Geist_Mono } from "next/font/google";
 import ThemeProvider from "~/components/providers/theme-provider";
+import SmoothScroll from "~/components/smooth-scroll";
 import { Toaster } from "~/components/ui/sonner";
+import { FoldersStoreProvider } from "~/features/folder/folder-provider";
 import { TRPCReactProvider } from "~/trpc/react";
+import { api } from "~/trpc/server";
 
 const geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -30,12 +33,20 @@ export const metadata: Metadata = {
   keywords: ["bookmark manager", "productivity", "organization", "web tools"],
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
+  const folders = await api.folder.findAll();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistMono.className} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <FoldersStoreProvider data={folders}>
+              <SmoothScroll>{children}</SmoothScroll>
+            </FoldersStoreProvider>
+          </TRPCReactProvider>
           <Toaster position="top-center" theme="dark" richColors />
         </ThemeProvider>
       </body>

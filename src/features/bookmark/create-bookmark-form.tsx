@@ -2,30 +2,48 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
+import { CheckboxGroupConform } from "~/components/conform/checkbox-group-conform";
 import { InputConform } from "~/components/conform/input-conform";
 import { Button } from "~/components/ui/button";
 import { DialogClose } from "~/components/ui/dotted-dialog";
+import { CreateBookmarkInput } from "~/server/api/routers/bookmark/bookmark.schema";
 import { api } from "~/trpc/react";
+import { useFoldersStore } from "../folder/folder-provider";
 
-const CreateBookmarkFormSchema = z.object({ url: z.string().url() });
+const CreateBookmarkFormSchema = CreateBookmarkInput;
 
 const CreateBookmarkForm = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const getFolders = useFoldersStore((s) => s.getFolders);
+
+  const folders = getFolders();
+
+  const checkboxItems = useMemo(
+    () =>
+      folders.map((folder) => ({
+        name: folder.name,
+        value: folder.id,
+      })),
+    [folders],
+  );
 
   const { mutateAsync, isPending } = api.bookmark.create.useMutation({
-    onSuccess: (_, val) => {
-      toast.success(`${val.url} has added to the bookmarks`);
+    onSuccess: (data) => {
+      toast.success(data.messages);
       router.refresh();
     },
-    onError: (error, val) => {
-      toast.error(`${val.url}: ${error.message}`);
-    },
+    onError: (error, val) => toast.error(`${val.url}: ${error.message}`),
   });
 
   const [form, fields] = useForm({
+    defaultValue: {
+      folders: searchParams.get("folder") ? [searchParams.get("folder")] : [],
+    },
+
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CreateBookmarkFormSchema });
     },
@@ -62,6 +80,13 @@ const CreateBookmarkForm = () => {
         {fields.url.errors && (
           <p className="text-[.8rem] text-red-500">{fields.url.errors}</p>
         )}
+      </div>
+      <div>
+        <CheckboxGroupConform
+          meta={fields.folders}
+          items={checkboxItems}
+          disabled={isPending}
+        />
       </div>
       <div className="flex items-center justify-end gap-2">
         <DialogClose asChild>

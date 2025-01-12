@@ -19,5 +19,9 @@ const BookmarkCardSkeleton = () => {
 
 export const BookmarkCardSkeletonList = () => {
   const numbers = Array.from({ length: 3 }, (_, i) => i + 1);
-  return <List of={numbers}>{(s) => <BookmarkCardSkeleton key={s} />}</List>;
+  return (
+    <div className="grid grid-cols-3 gap-x-2 gap-y-3">
+      <List of={numbers}>{(s) => <BookmarkCardSkeleton key={s} />}</List>
+    </div>
+  );
 };

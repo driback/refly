@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { MutationResponse } from "../shared.schema";
 
-export const FolderSchema = z.object({ id: z.string(), name: z.string() });
+const FolderSchema = z.object({ id: z.string(), name: z.string() });
+export type TFolderSchema = z.infer<typeof FolderSchema>;
 
 export const FindAllFolderOutput = FolderSchema.array();
 export type TFindAllFolderOutput = z.infer<typeof FindAllFolderOutput>;
@@ -20,3 +22,7 @@ export const CreateFolderInput = z.object({
     .refine((value) => !/\s+$/.test(value), "Folder name cannot end with whitespace")
     .transform((value) => value.trim()),
 });
+
+export const CreateFolderOutput = MutationResponse(
+  z.object({ id: z.string(), name: z.string() }),
+);

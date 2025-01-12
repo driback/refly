@@ -10,16 +10,21 @@ import { Button } from "~/components/ui/button";
 import { DialogClose } from "~/components/ui/dotted-dialog";
 import { CreateFolderInput } from "~/server/api/routers/folder/folder.schema";
 import { api } from "~/trpc/react";
+import { useFoldersStore } from "./folder-provider";
 
 const CreateFolderFormSchema = CreateFolderInput;
 
 const CreateFolderForm = () => {
   const router = useRouter();
+  const addFolder = useFoldersStore((s) => s.addFolder);
 
   const { mutateAsync, isPending } = api.folder.create.useMutation({
-    onSuccess: (_, val) => {
-      toast.success(`Folder ${val.folderName} has added to database`);
-      router.refresh();
+    onSuccess: (data) => {
+      if (data.data) {
+        addFolder(data.data.id, { id: data.data.id, name: data.data.name });
+        router.refresh();
+        toast.success(data.messages);
+      }
     },
     onError: (error, val) => {
       toast.error(`Folder ${val.folderName}: ${error.message}`);
