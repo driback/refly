@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { env } from "~/configs/env";
 import { parseMetadata } from "~/lib/metadata-parser";
 import { publicProcedure } from "~/server/api/trpc";
 import { BookmarkRepository } from "~/server/db/repositorys/bookmark.repository";
@@ -10,17 +11,11 @@ export const createBookmark = publicProcedure
   .output(MutationResponse())
   .mutation(async ({ input }) => {
     try {
-      const response = await fetch(input.url, {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-          Accept:
-            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.9",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
+      const params = new URLSearchParams({
+        api_key: env.SCRAPPER_API_KEY,
+        url: input.url,
       });
+      const response = await fetch(`http://api.scraperapi.com?${params.toString()}`);
 
       if (!response.ok) {
         throw new TRPCError({
@@ -71,3 +66,34 @@ export const createBookmark = publicProcedure
       });
     }
   });
+
+// const response = await fetch("https://api.zyte.com/v1/extract", {
+//   headers: {
+//     accept: "application/json, text/plain, */*",
+//     "accept-language": "en-GB,en;q=0.9,en-US;q=0.8",
+//     authorization: "Basic ODRhMDcwMzkwMzU1NDQ1NTg3OTY3NjI2OWJlOWFjNDU6",
+//     "content-type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     url: input.url,
+//     httpResponseBody: true,
+//   }),
+//   method: "POST",
+// });
+
+// if (!response.ok) {
+//   throw new TRPCError({
+//     code: "BAD_REQUEST",
+//     message: `Falied to fetch URL: ${response.statusText}`,
+//   });
+// }
+
+// const json = (await response.json()) as {
+//   url: string;
+//   status: number;
+//   httpResponseBody: string;
+// };
+
+// const originalString = Buffer.from(json.httpResponseBody, "base64").toString(
+//   "utf-8",
+// );
