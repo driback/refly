@@ -22,7 +22,14 @@ const BookmarkImage = ({ src, alt, className }: ImageProps) => (
   />
 );
 
-const BookmarkCard = ({ url, image, title, description, icon }: TBookmarkSchema) => {
+const BookmarkCard = ({
+  url,
+  image,
+  title,
+  description,
+  icon,
+  hostname,
+}: TBookmarkSchema) => {
   const placeholderText =
     "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, quas!";
 
@@ -53,6 +60,7 @@ const BookmarkCard = ({ url, image, title, description, icon }: TBookmarkSchema)
         <div className="relative size-4 bg-secondary">
           <BookmarkImage src={icon!} alt={title} className="object-cover" />
         </div>
+        <p className="ml-2 text-xs">{hostname}</p>
         <SquareArrowOutUpRightIcon className="absolute right-1 bottom-1 size-4 scale-50 opacity-0 mix-blend-difference transition-all group-hover:scale-100 group-hover:opacity-100" />
       </div>
     </div>

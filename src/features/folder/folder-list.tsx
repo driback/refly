@@ -21,7 +21,9 @@ const FolderList = () => {
             data-active={folder.id === folderId}
             className="text-sm opacity-70 transition-opacity hover:opacity-100 data-[active=true]:font-medium data-[active=true]:opacity-100"
           >
-            <Link href={`/?folder=${folder.id}`}>{folder.name}</Link>
+            <Link href={`/?folder=${folder.id}`} prefetch={true}>
+              {folder.name}
+            </Link>
           </li>
         )}
       </List>

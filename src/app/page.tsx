@@ -34,7 +34,7 @@ const Home = async ({ searchParams }: PageProps) => {
     <SelectableStoreProvider key={folderId}>
       <AppWrapper>
         <AppHeader />
-        <div className="mx-auto flex min-h-[calc(100dvh-5rem)] max-w-[60dvw] flex-col">
+        <div className="mx-auto flex max-w-[60dvw] flex-col">
           <main className="grid w-full flex-1">
             <Suspense
               key={JSON.stringify(bookmarkListInput)}

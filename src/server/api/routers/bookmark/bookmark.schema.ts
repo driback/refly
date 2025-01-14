@@ -7,6 +7,7 @@ const BookmarkSchema = z.object({
   icon: z.string().nullable(),
   image: z.string().nullable(),
   url: z.string(),
+  hostname: z.string(),
 });
 export type TBookmarkSchema = z.infer<typeof BookmarkSchema>;
 

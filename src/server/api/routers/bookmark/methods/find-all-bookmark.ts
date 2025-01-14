@@ -36,6 +36,7 @@ export const findAllBookMark = publicProcedure
       icon: s.iconUrl,
       image: s.imageUrl,
       url: s.url,
+      hostname: new URL(s.url).host,
     }));
 
     return output;
