@@ -15,7 +15,6 @@ export const Bookmark = pgTable("bookmark", {
     .primaryKey()
     .$default(() => crypto.randomUUID())
     .notNull(),
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
   url: text("url").unique().notNull(),
   title: text("title"),
   description: text("description"),
@@ -63,13 +62,24 @@ export const BookmarkToFolder = pgTable("bookmark_to_folder", {
     .notNull(),
 });
 
+export const BookmarkToUser = pgTable("bookmark_to_user", {
+  bookmarkId: text("bookmark_id")
+    .references(() => Bookmark.id, { onDelete: "cascade" })
+    .notNull(),
+  userId: text("user_id")
+    .references(() => user.id, { onDelete: "cascade" })
+    .notNull(),
+  createdAt: timestamp("created_at", { precision: 3, mode: "date" })
+    .defaultNow()
+    .notNull(),
+});
+
 //Tag
 export const Tag = pgTable("tag", {
   id: text("id")
     .primaryKey()
     .$default(() => nanoid(10))
     .notNull(),
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
   name: text("name").unique().notNull(),
 });
 
@@ -124,7 +134,7 @@ export const account = pgTable("account", {
   updatedAt: timestamp("updated_at", { precision: 3, mode: "date" }).notNull(),
 });
 
-export const Verification = pgTable("verification", {
+export const verification = pgTable("verification", {
   id: text("id")
     .primaryKey()
     .$default(() => nanoid(10))
@@ -136,15 +146,25 @@ export const Verification = pgTable("verification", {
   updatedAt: timestamp("updated_at", { precision: 3, mode: "date" }),
 });
 
-export const BookmarkRelations = relations(Bookmark, ({ many, one }) => ({
-  tag: many(BookmarkToTag),
-  folder: many(BookmarkToFolder),
-  user: one(user, { fields: [Bookmark.userId], references: [user.id] }),
+export const UserRelation = relations(user, ({ many }) => ({
+  bookmark: many(BookmarkToUser),
+  folder: many(Folder),
 }));
 
-export const TagRelations = relations(Tag, ({ many, one }) => ({
+export const BookmarkToUserRelation = relations(BookmarkToUser, ({ one }) => ({
+  bookmark: one(Bookmark, {
+    fields: [BookmarkToUser.bookmarkId],
+    references: [Bookmark.id],
+  }),
+}));
+
+export const BookmarkRelations = relations(Bookmark, ({ many }) => ({
+  tag: many(BookmarkToTag),
+  folder: many(BookmarkToFolder),
+}));
+
+export const TagRelations = relations(Tag, ({ many }) => ({
   bookmark: many(BookmarkToTag),
-  user: one(user, { fields: [Tag.userId], references: [user.id] }),
 }));
 
 export const FolderRelations = relations(Folder, ({ one, many }) => ({

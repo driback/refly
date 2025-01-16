@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure } from "~/server/api/trpc";
-import { BookmarkRepository } from "~/server/db/repositorys/bookmark.repository";
+import { BookmarkToUserRepository } from "~/server/db/repositorys/bookmark-to-user.repository";
 import { MutationResponse } from "../../shared.schema";
 import { DeleteBookmarkInput } from "../bookmark.schema";
 
@@ -16,7 +16,7 @@ export const deleteBookmark = protectedProcedure
     }
 
     try {
-      const deleteBookmark = await BookmarkRepository.delete(input.ids, user.id);
+      const deleteBookmark = await BookmarkToUserRepository.delete(input.ids, user.id);
       if (!deleteBookmark) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -29,6 +29,8 @@ export const deleteBookmark = protectedProcedure
         messages: `Successfully deleted ${input.ids.length} bookmark(s)`,
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
+
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: error instanceof Error ? error.message : "Unknown error occurred",

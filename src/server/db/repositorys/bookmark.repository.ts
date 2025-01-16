@@ -1,7 +1,7 @@
-import { and, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, ilike, inArray, or } from "drizzle-orm";
 import { db } from "../client";
 import { Bookmark, BookmarkToFolder } from "../schemas";
-import { handleMutation } from "./respository.helper";
+import { handleMutation, handleQuerys } from "./respository.helper";
 
 type BookmarkInsert = typeof Bookmark.$inferInsert;
 type BookmarkAddFolderInsert = typeof BookmarkToFolder.$inferInsert;
@@ -20,11 +20,8 @@ export const BookmarkRepository = {
     const res = await db.insert(Bookmark).values(values).returning();
     return handleMutation(res);
   },
-  delete: async (ids: string[], userId: string) => {
-    const res = await db
-      .delete(Bookmark)
-      .where(and(eq(Bookmark.userId, inArray(Bookmark.id, ids))))
-      .returning();
+  delete: async (ids: string[]) => {
+    const res = await db.delete(Bookmark).where(inArray(Bookmark.id, ids)).returning();
     return handleMutation(res);
   },
   addFolder: async (values: BookmarkAddFolderInsert[]) => {
@@ -40,15 +37,17 @@ export const BookmarkRepository = {
     });
     return res;
   },
+  findByUrl: async (url: string) => {
+    const res = await db.query.Bookmark.findFirst({
+      where: (bk, { eq }) => eq(bk.url, url),
+    });
+    return handleQuerys(res);
+  },
 };
 
 const buildFindAllWhereClause = (props: BookmarkFindAll["filter"]) => {
   if (!props) return undefined;
   const whereOpt = [];
-
-  if (props.userId) {
-    whereOpt.push(eq(Bookmark.userId, props.userId));
-  }
 
   if (props.folderItemIds) {
     whereOpt.push(inArray(Bookmark.id, props.folderItemIds));

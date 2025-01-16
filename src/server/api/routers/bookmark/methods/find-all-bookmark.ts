@@ -1,6 +1,6 @@
 import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/client";
-import { BookmarkRepository } from "~/server/db/repositorys/bookmark.repository";
+import { BookmarkToUserRepository } from "~/server/db/repositorys/bookmark-to-user.repository";
 import {
   FindAllBookmarkInput,
   FindAllBookmarkOutput,
@@ -19,24 +19,23 @@ export const findAllBookMark = protectedProcedure
       const folderRes = await db.query.BookmarkToFolder.findMany({
         where: (fol, { eq }) => eq(fol.folderId, folderId),
       });
-
       folderItemIds = folderRes.map((f) => f.bookmarkId);
     }
 
-    const res = await BookmarkRepository.findAll({
+    const res = await BookmarkToUserRepository.findAll({
       page,
       limit,
-      filter: { search, folderItemIds, userId: user.id },
+      filter: { folderItemIds, userId: user.id, search },
     });
 
-    const output: TBookmarkSchema[] = res.map((s) => ({
-      id: s.id,
-      title: s.title!,
-      description: s.description!,
-      icon: s.iconUrl,
-      image: s.imageUrl,
-      url: s.url,
-      hostname: new URL(s.url).host,
+    const output: TBookmarkSchema[] = res.map(({ bookmark }) => ({
+      id: bookmark.id,
+      title: bookmark.title!,
+      description: bookmark.description!,
+      icon: bookmark.iconUrl,
+      image: bookmark.imageUrl,
+      url: bookmark.url,
+      hostname: new URL(bookmark.url).host,
     }));
 
     return output;

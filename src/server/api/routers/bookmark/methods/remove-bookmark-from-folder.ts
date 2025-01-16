@@ -23,6 +23,8 @@ export const removeBookmarkFromFolder = protectedProcedure
         messages: `Successfully deleted ${input.bookmarkId} from ${input.folderId}`,
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
+
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: error instanceof Error ? error.message : "Unknown error occurred",

@@ -26,6 +26,8 @@ export const createFolder = protectedProcedure
         data: { id: folder.id, name: folder.name },
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
+
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: error instanceof Error ? error.message : "Unknown error occurred",
