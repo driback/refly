@@ -23,5 +23,5 @@
       "src/pages/**/*.{js,jsx,ts,tsx}"
     ]
   },
-  "ignore": ["migrate.ts"]
+  "ignore": ["migrate.ts", "reset.ts"]
 }

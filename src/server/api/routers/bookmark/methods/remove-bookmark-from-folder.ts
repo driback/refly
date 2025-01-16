@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { BookmarkToFolderRespository } from "~/server/db/repositorys/bookmark-to-folder.repository";
 import { RemoveBookmarkFromFolderInput } from "../bookmark.schema";
 
-export const removeBookmarkFromFolder = publicProcedure
+export const removeBookmarkFromFolder = protectedProcedure
   .input(RemoveBookmarkFromFolderInput)
   .mutation(async ({ input }) => {
     try {

@@ -1,4 +1,4 @@
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/client";
 import { BookmarkRepository } from "~/server/db/repositorys/bookmark.repository";
 import {
@@ -7,10 +7,10 @@ import {
   type TBookmarkSchema,
 } from "../bookmark.schema";
 
-export const findAllBookMark = publicProcedure
+export const findAllBookMark = protectedProcedure
   .input(FindAllBookmarkInput)
   .output(FindAllBookmarkOutput)
-  .query(async ({ input }) => {
+  .query(async ({ input, ctx: { user } }) => {
     const { page, limit, search, folderId } = input;
 
     let folderItemIds: string[] | undefined = undefined;
@@ -26,7 +26,7 @@ export const findAllBookMark = publicProcedure
     const res = await BookmarkRepository.findAll({
       page,
       limit,
-      filter: { search, folderItemIds },
+      filter: { search, folderItemIds, userId: user.id },
     });
 
     const output: TBookmarkSchema[] = res.map((s) => ({

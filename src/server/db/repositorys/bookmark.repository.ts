@@ -1,4 +1,4 @@
-import { and, ilike, inArray, or } from "drizzle-orm";
+import { and, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "../client";
 import { Bookmark, BookmarkToFolder } from "../schemas";
 import { handleMutation } from "./respository.helper";
@@ -9,6 +9,7 @@ type BookmarkFindAll = {
   page: number;
   limit: number;
   filter: Partial<{
+    userId: string;
     search: string;
     folderItemIds: string[];
   }>;
@@ -19,8 +20,11 @@ export const BookmarkRepository = {
     const res = await db.insert(Bookmark).values(values).returning();
     return handleMutation(res);
   },
-  delete: async (ids: string[]) => {
-    const res = await db.delete(Bookmark).where(inArray(Bookmark.id, ids)).returning();
+  delete: async (ids: string[], userId: string) => {
+    const res = await db
+      .delete(Bookmark)
+      .where(and(eq(Bookmark.userId, inArray(Bookmark.id, ids))))
+      .returning();
     return handleMutation(res);
   },
   addFolder: async (values: BookmarkAddFolderInsert[]) => {
@@ -41,6 +45,10 @@ export const BookmarkRepository = {
 const buildFindAllWhereClause = (props: BookmarkFindAll["filter"]) => {
   if (!props) return undefined;
   const whereOpt = [];
+
+  if (props.userId) {
+    whereOpt.push(eq(Bookmark.userId, props.userId));
+  }
 
   if (props.folderItemIds) {
     whereOpt.push(inArray(Bookmark.id, props.folderItemIds));

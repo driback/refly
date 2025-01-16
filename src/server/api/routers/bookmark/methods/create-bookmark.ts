@@ -1,15 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import { env } from "~/configs/env";
 import { parseMetadata } from "~/lib/metadata-parser";
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { BookmarkRepository } from "~/server/db/repositorys/bookmark.repository";
 import { MutationResponse } from "../../shared.schema";
 import { CreateBookmarkInput } from "../bookmark.schema";
 
-export const createBookmark = publicProcedure
+export const createBookmark = protectedProcedure
   .input(CreateBookmarkInput)
   .output(MutationResponse())
-  .mutation(async ({ input }) => {
+  .mutation(async ({ input, ctx: { user } }) => {
     try {
       const params = new URLSearchParams({
         api_key: env.SCRAPPER_API_KEY,
@@ -39,6 +39,7 @@ export const createBookmark = publicProcedure
         description: metadata.base.description || null,
         imageUrl: metadata.openGraph.image?.url || iconUrl,
         iconUrl,
+        userId: user.id,
       });
 
       if (!bookmark) {

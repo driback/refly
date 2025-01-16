@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { BookmarkToFolderRespository } from "~/server/db/repositorys/bookmark-to-folder.repository";
 import { MutationResponse } from "../../shared.schema";
 import { BookmarkToFolderInput } from "../bookmark.schema";
 
-export const bookmarkToFolder = publicProcedure
+export const bookmarkToFolder = protectedProcedure
   .input(BookmarkToFolderInput)
   .output(MutationResponse())
   .mutation(async ({ input }) => {

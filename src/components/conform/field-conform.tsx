@@ -1,11 +1,15 @@
 import type { ReactNode } from "react";
+import { cn } from "~/lib/utils";
 
-const FieldConform = ({
-  errors,
-  children,
-}: { errors?: string | string[]; children: ReactNode }) => {
+type FieldConformProps = {
+  errors?: string | string[];
+  children: ReactNode;
+  className?: string;
+};
+
+const FieldConform = ({ errors, children, className }: FieldConformProps) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("flex flex-col gap-2", className)}>
       {children}
       {errors && <p className="text-[.8rem] text-red-500">{errors}</p>}
     </div>

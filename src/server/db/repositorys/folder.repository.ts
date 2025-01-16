@@ -9,8 +9,9 @@ export const FolderRespository = {
     const res = await db.insert(Folder).values(values).returning();
     return handleMutation(res);
   },
-  findAll: async () => {
+  findAll: async (userId: string) => {
     const res = await db.query.Folder.findMany({
+      where: (fl, { eq }) => eq(fl.userId, userId),
       orderBy: (fl, { desc }) => desc(fl.createdAt),
     });
     return res;

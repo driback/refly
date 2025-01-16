@@ -1,15 +1,16 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { FolderRespository } from "~/server/db/repositorys/folder.repository";
 import { CreateFolderInput, CreateFolderOutput } from "../folder.schema";
 
-export const createFolder = publicProcedure
+export const createFolder = protectedProcedure
   .input(CreateFolderInput)
   .output(CreateFolderOutput)
-  .mutation(async ({ input }) => {
+  .mutation(async ({ input, ctx: { user } }) => {
     try {
       const folder = await FolderRespository.create({
         name: input.folderName,
+        userId: user.id,
       });
 
       if (!folder) {

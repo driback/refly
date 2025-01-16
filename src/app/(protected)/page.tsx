@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import AppHeader from "~/components/app-header";
-import AppWrapper from "~/components/app-wrapper";
+import { AppWrapper, PageWrapper } from "~/components/app-wrapper";
 import { SelectedItems } from "~/components/selectable/selectable-items";
 import { SelectableStoreProvider } from "~/components/selectable/selectable-provider";
 import { BookmarkCardSkeletonList } from "~/features/bookmark/bookmark-card-skeleton";
@@ -34,15 +34,15 @@ const Home = async ({ searchParams }: PageProps) => {
     <SelectableStoreProvider key={folderId}>
       <AppWrapper>
         <AppHeader />
-        <div className="mx-auto flex max-w-[60dvw] flex-col">
-          <main className="grid w-full flex-1">
+        <PageWrapper>
+          <div className="grid w-full">
             <Suspense
               key={JSON.stringify(bookmarkListInput)}
               fallback={<BookmarkCardSkeletonList />}
             >
               <BookmarkList input={bookmarkListInput} />
             </Suspense>
-          </main>
+          </div>
           <div className="fixed bottom-0 left-0 z-0 flex h-[100dvh] w-full max-w-[calc(calc(100dvw-60dvw)/2)] flex-col items-center justify-center gap-4">
             <div className="flex w-full flex-col items-end gap-4 p-4">
               <CreateFolder />
@@ -59,7 +59,7 @@ const Home = async ({ searchParams }: PageProps) => {
               </div>
             </div>
           </div>
-        </div>
+        </PageWrapper>
       </AppWrapper>
     </SelectableStoreProvider>
   );
